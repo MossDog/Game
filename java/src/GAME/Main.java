@@ -1,7 +1,8 @@
 package GAME;
 
-public class Main
-{	
+import OBJECTS.VisualSetup;
+
+public class Main{	
 
 	public void startUI()
 	{

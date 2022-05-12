@@ -1,23 +1,28 @@
 package OBJECTS;
 
-import processing.core.PApplet;
+import java.sql.Time;
+
 import processing.core.PVector;
 
-public class Player extends PApplet{
+public class Player extends VisualSetup{
 
     //declare variables.
     public PVector position;
-    public int diameter;
+    public int diameter, color;
+    VisualSetup p;
 
     //cosntructor
-    public Player(int width, int height){
+    public Player(int width, int height, VisualSetup p){
         this.position = new PVector(width/2, height/2);
         this.diameter = (int)(height * 0.2f);
+        this.p = p;
     }
 
     public void drawPlayer(){
-        
-        ellipse(position.x, position.y, diameter, diameter);
+        p.fill(255);
+        p.stroke(color%360, 100, 100);
+        p.ellipse(position.x, position.y, diameter, diameter);
+        color++;
     }
 
 }

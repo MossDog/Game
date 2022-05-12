@@ -1,14 +1,15 @@
-package GAME;
+/* THIS CLASS IS USED TO GIVE GAME OBJECTS ACCESS TO P.C.PAPPLET */
 
-import OBJECTS.Player;
+package OBJECTS;
+
 import processing.core.PApplet;
 
 public class VisualSetup extends PApplet
 {
 
     //declare variables
-    Player player;
-
+    private Player player;
+    private boolean roundWin;
 
     //settings
     public void settings()
@@ -22,16 +23,28 @@ public class VisualSetup extends PApplet
     //setup
     public void setup()
     {
-        colorMode(RGB, 255, 255, 255);
+        colorMode(HSB, 360, 100, 100);
+        strokeWeight(5);
         background(0);
         //declare visualizations
-        player = new Player(width, height);
+        player = new Player(width, height, this);
     }//end setup
 
 
     //draw
     public void draw(){
         player.drawPlayer();
+
+        //is round over? if so start new round
+        if(roundWin == true){
+            nextRound();
+            roundWin = false;
+        }
+
     }//end draw
+
+    private void nextRound(){
+        
+    }
 
 }//end
