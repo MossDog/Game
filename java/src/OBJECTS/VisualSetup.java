@@ -32,25 +32,29 @@ public class VisualSetup extends PApplet
         background(0);
         //declare visualizations
         player = new Player(width, height, this);
-        round = 1;
+        round = 0;
+        roundWin = true;
     }//end setup
 
 
     //draw
     public void draw(){
-        player.drawPlayer();
-        updateEnemies();
-
+        background(0);
         //is round over? if so start new round
         if(roundWin == true){
             nextRound();
             roundWin = false;
         }
 
+        updateEnemies();
+        player.updatePlayer();
+
     }//end draw
 
     private void nextRound(){
-        
+        round++;
+        numEnemies = 10 + round;
+        generateEnemies();
     }
 
     // Enemy-Player Collision detection
@@ -95,7 +99,7 @@ public class VisualSetup extends PApplet
 
     public void updateEnemies(){
         //LOOP THROUGH ARRAYLIST OF ALL ENEMIES
-        for(int i = 0;i < enemies.size(); i++){
+        for(int i = 0; i < enemies.size(); i++){
             //update all enemies
             enemies.get(i).updateEnemy();
         }//end loop
@@ -103,8 +107,8 @@ public class VisualSetup extends PApplet
 
     //POPULATES ARRAYLIST OF ENEMIES
     public void generateEnemies(){
-        for(int i = 0; i < numEnemies; i++){
-            enemies.add(new Enemy(width, height, 0, 0, this));
+        for(int i = 0; i < 50; i++){
+            enemies.add(new Enemy(width, height, 100, round * 5, this));
         }//end loop
     }//end method
 
