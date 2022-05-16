@@ -57,58 +57,26 @@ public class VisualSetup extends PApplet
         generateEnemies();
     }
 
-    // Enemy-Player Collision detection
-    boolean circleRect(Player player, Enemy enemy){
-
-        // temporary variables to set edges for testing
-        float testX = player.position.x;
-        float testY = player.position.y;
-    
-        // which edge is closest?
-        // left edge
-        if (player.position.x < enemy.position.x){
-            testX = enemy.position.x;
-        }else
-        // right edge
-        if (player.position.x > enemy.position.x +  enemy.size){
-            testX = enemy.position.x +  enemy.size;
-        }
-
-        // which edge is closest?
-        // top edge
-        if (player.position.y < enemy.position.y){
-            testY = enemy.position.y;
-        }   
-        else
-        // bottom edge
-        if (player.position.y > enemy.position.y +  enemy.size){
-            testY = enemy.position.y +  enemy.size;
-        } 
-    
-        // get distance from closest edges
-        float distX = player.position.x-testX;
-        float distY = player.position.y-testY;
-        float distance = sqrt( (distX*distX) + (distY*distY) );
-    
-        // if the distance is less than the radius, collision!
-        if (distance <= player.diameter){
-        return true;
-        }
-        return false;
-    }
 
     public void updateEnemies(){
         //LOOP THROUGH ARRAYLIST OF ALL ENEMIES
         for(int i = 0; i < enemies.size(); i++){
             //update all enemies
-            enemies.get(i).updateEnemy();
+            enemies.get(i).updateEnemy(height);
         }//end loop
     }//end method
 
     //POPULATES ARRAYLIST OF ENEMIES
     public void generateEnemies(){
+
+        if(round % 5 == 0){
+            for(int j = 0; j < 1 * round / 5; j++){
+                enemies.add(new Enemy(width, height, 100, round * 5, random(100, 150) / (float)(round * 0.05), this));
+            }
+        }
+
         for(int i = 0; i < 50; i++){
-            enemies.add(new Enemy(width, height, 100, round * 5, this));
+            enemies.add(new Enemy(width, height, 100, round * 5, random(30, 50) / (float)(round * 0.05), this));
         }//end loop
     }//end method
 

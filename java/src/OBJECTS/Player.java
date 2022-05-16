@@ -17,7 +17,8 @@ public class Player extends VisualSetup{
     }
 
     public void updatePlayer(){
-        p.fill(255);
+        p.fill(0, 0, 100);
+        p.strokeWeight(3);
         p.stroke(abs(p.frameCount%360), 100, 100);
         p.ellipse(position.x, position.y, diameter, diameter);
     }
