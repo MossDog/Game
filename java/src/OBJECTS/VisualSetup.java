@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 
+
 public class VisualSetup extends PApplet
 {
+
 
     //declare variables
     private Player player;
@@ -31,7 +33,7 @@ public class VisualSetup extends PApplet
         strokeWeight(5);
         background(0);
         //declare visualizations
-        player = new Player(width, height, this);
+        player = new Player(width, height, 10, this);
         round = 0;
         roundWin = true;
     }//end setup
@@ -40,31 +42,39 @@ public class VisualSetup extends PApplet
     //draw
     public void draw(){
         background(0);
+
         //is round over? if so start new round
-        if(roundWin == true){
+        if(enemies.size() == 0){
             nextRound();
             roundWin = false;
         }
 
         updateEnemies();
         player.updatePlayer();
+        player.fire(enemies);
 
     }//end draw
 
+
     private void nextRound(){
+
         round++;
-        numEnemies = 10 + round;
         generateEnemies();
+
     }
 
 
+    //UPDATES ALL ENEMIES IN ARRAYLIST
     public void updateEnemies(){
+
         //LOOP THROUGH ARRAYLIST OF ALL ENEMIES
         for(int i = 0; i < enemies.size(); i++){
             //update all enemies
             enemies.get(i).updateEnemy(height);
         }//end loop
+
     }//end method
+
 
     //POPULATES ARRAYLIST OF ENEMIES
     public void generateEnemies(){
@@ -75,9 +85,11 @@ public class VisualSetup extends PApplet
             }
         }
 
-        for(int i = 0; i < 50; i++){
+        for(int i = 0; i < 10 + round / 2; i++){
             enemies.add(new Enemy(width, height, 100, round * 5, random(30, 50) / (float)(round * 0.05), this));
         }//end loop
+
     }//end method
+
 
 }//end

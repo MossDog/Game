@@ -6,6 +6,7 @@ public class Enemy extends VisualSetup{
 
     public PVector position, center, velocity;
     public int size;
+    public float distance;
     private VisualSetup p;
     private boolean collision;
     
@@ -91,8 +92,8 @@ public class Enemy extends VisualSetup{
             // get distance from closest edges
             float distX = center.x-testX;
             float distY = center.y-testY;
-            float distance = sqrt((distX*distX) + (distY*distY));
-            System.out.println("distx: " + distX + "\nDisty: " + distY + "\ndistance: " + distance + "\n(int)(height * 0.2f)" + (int)(height * 0.2f));
+            distance = sqrt((distX*distX) + (distY*distY));
+            //System.out.println("distx: " + distX + "\nDisty: " + distY + "\ndistance: " + distance + "\n(int)(height * 0.2f)" + (int)(height * 0.2f));
         
             // if the distance is less than the radius, collision!
             if (distance <= (int)(height * 0.2f)/2){
