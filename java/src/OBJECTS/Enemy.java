@@ -39,19 +39,19 @@ public class Enemy extends VisualSetup{
         PVector position;
 
         switch(side){
-            case 0: System.out.println("0");
+            case 0:
             position = new PVector(random(-size, width), -50);
             return position;
 
-            case 1: System.out.println("1");
+            case 1:
             position = new PVector(width + 50, random(0, height));
             return position;
 
-            case 2: System.out.println("2");
+            case 2:
             position = new PVector(random(0, width), height + 50);
             return position;
 
-            case 3: System.out.println("3");
+            case 3:
             position = new PVector(-50, random(0, height));
             return position;
 
