@@ -38,19 +38,19 @@ public class Player extends VisualSetup{
             }
         }
 
-        PVector riseRun = PVector.sub(position, enemy.position);
-        float angle = atan(riseRun.x/riseRun.y);
-        p.strokeWeight(12);
-        p.line(position.x + cos(angle), position.y + sin(angle), enemy.position.x + (enemy.size/2), enemy.position.y + enemy.size/2);
+        PVector rectCenter = new PVector(enemy.position.x + enemy.size/2, enemy.position.y + enemy.size/2);
+        PVector circleSurf = findCircleSurf(rectCenter, position, (float)diameter/2);
+
+        p.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
+
     }
 
-/* 
-    cos(radians(angle)) * radius;
-    sin(radians(angle)) * radius;
 
-    angle is a value between 0 and 359
-    radius gives you the length of the line
-    atan is used to get the angle of the beam in radians using rise/run
-*/
+    PVector findCircleSurf(PVector rectCenter, PVector circleCenter, float radius){
+        PVector offset  = PVector.sub(circleCenter, rectCenter);          
+        offset.normalize();
+        PVector p2 = PVector.sub(circleCenter, offset.mult(radius));
+        return p2;
+    }
 
 }
