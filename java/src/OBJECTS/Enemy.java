@@ -73,7 +73,7 @@ public class Enemy extends VisualSetup{
         }
     }
 
-    
+
     
     // Enemy-Player Collision detection
     boolean circleRect(int height){
