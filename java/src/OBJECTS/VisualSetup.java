@@ -36,7 +36,7 @@ public class VisualSetup extends PApplet
         strokeWeight(5);
         background(0);
         //declare visualizations
-        player = new Player(width, height, 10, this);
+        player = new Player(width, height, this);
         round = 0;
         roundWin = true;
 
@@ -47,19 +47,25 @@ public class VisualSetup extends PApplet
     //draw
     public void draw(){
 
-        System.out.println();
-        background(0);
+        if(player.health > 0){
 
-        //is round over? if so start new round
-        if(enemies.size() == 0){
-            nextRound();
-            roundWin = false;
+            background(0);
+
+            //is round over? if so start new round
+            if(enemies.size() == 0){
+                nextRound();
+                roundWin = false;
+            }//end if
+
+            player.updatePlayer(enemies);
+            updateEnemies();
+
         }//end if
+        else{
 
-        updateEnemies();
-        player.updatePlayer(enemies);
-        player.fire(enemies);
+            System.out.println("Player has died");
 
+        }//end else
     }//end draw
 
 
@@ -87,7 +93,7 @@ public class VisualSetup extends PApplet
 
             //update all enemies
             if(e.health > 0){
-                e.updateEnemy(height);
+                e.updateEnemy();
             }//end if
             else{
                 itr.remove();
@@ -105,14 +111,14 @@ public class VisualSetup extends PApplet
 
             for(int j = 0; j < 1 * round / 5; j++){
 
-                enemies.add(new Enemy(width, height, 100, round * 5, 5 + (round * 0.1f), this));
+                enemies.add(new Enemy(width, height, random(30, 50) + (round * 2.25f), random(15, 30) + (round * 2.25f), 700, player, this));
 
             }//end loop
         }//end if
 
         for(int i = 0; i < 10 + round / 2; i++){
 
-            enemies.add(new Enemy(width, height, 100, round * 5, random(30, 50) / (float)(round * 0.05), this));
+            enemies.add(new Enemy(width, height, random(10, 15) + (round * 2.25f), random(10, 15) + (round * 2.25f), 700, player, this));
 
         }//end loop
     }//end method

@@ -9,32 +9,33 @@ public class Player extends VisualSetup{
     //declare variables.
     public PVector position;
     public long prevTime, timePassed;
-    public int diameter, dmg, dmgCooldown;
-    private VisualSetup p;
+    public float diameter, dmg, dmgCooldown, health;
+    private VisualSetup v;
 
 
 
     //constructor
-    public Player(int width, int height, int dmg, VisualSetup p){
+    public Player(int width, int height, VisualSetup applet){
 
         this.position = new PVector(width/2, height/2);
         this.diameter = (int)(height * 0.2f);
-        this.p = p;
-        this.dmg = 150;
-        this.dmgCooldown = 500;
         this.prevTime = System.currentTimeMillis();
+        this.health = 100;
+        this.dmg = 15;
+        this.dmgCooldown = 500;
+        this.v = applet;
 
-    }//end method 
+    }//end method v
 
 
 
     public void updatePlayer(ArrayList<Enemy> enemies){
 
         //draw player
-        p.fill(0, 0, 100);
-        p.strokeWeight(3);
-        p.stroke(abs(p.frameCount%360), 100, 100);
-        p.ellipse(position.x, position.y, diameter, diameter);
+        v.fill(0, 0, 100);
+        v.strokeWeight(3);
+        v.stroke(abs(v.frameCount%360), 100, 100);
+        v.ellipse(position.x, position.y, diameter, diameter);
 
         //draw player fire
         fire(enemies);
@@ -49,7 +50,7 @@ public class Player extends VisualSetup{
         timePassed = System.currentTimeMillis() - prevTime;
 
         //dummy Enemy object
-        Enemy enemy = new Enemy(0, 0, 0, 0, 0, p);
+        Enemy enemy = null;
 
         //find closest enemy to player
         for(Enemy e : enemies){
@@ -68,7 +69,7 @@ public class Player extends VisualSetup{
         PVector circleSurf = findCircleSurf(rectCenter, position, (float)diameter/2);
 
         //draw player fire
-        p.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
+        v.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
 
 
         //deal damage
