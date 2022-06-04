@@ -6,8 +6,7 @@
 ## To Do List
 - Consider different Art styles
 - Figure out different fields like health and damage, how do these scale depending on the round?
-- Are rounds based on time or kills?
-- Implement time based updates to game by passing time since last update to functions from visualsetup
+- Add storing and loading player stats from CSV
 
 ### Completed
 - Figure out where collision detection belongs and implement it properly
@@ -16,6 +15,7 @@
 - implemented rudimentary health system and speed system
 - rounds are now cycled when arrayList is not populated
 - enemies can now die
+- player can now die
 
 ## Note
 - There are redundant libraries in /lib/
