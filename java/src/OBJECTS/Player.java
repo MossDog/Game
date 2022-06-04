@@ -9,7 +9,7 @@ public class Player extends VisualSetup{
     //declare variables.
     public PVector position;
     public long prevTime, timePassed;
-    public float diameter, dmg, dmgCooldown, health;
+    public float diameter, dmg, dmgCooldown, health, points, range;
     private VisualSetup v;
 
 
@@ -21,9 +21,12 @@ public class Player extends VisualSetup{
         this.diameter = (int)(height * 0.2f);
         this.prevTime = System.currentTimeMillis();
         this.health = 100;
-        this.dmg = 15;
+        this.dmg = 30;
         this.dmgCooldown = 500;
+        this.range = 300;
         this.v = applet;
+        this.points = 0;
+
 
     }//end method v
 
@@ -33,7 +36,7 @@ public class Player extends VisualSetup{
 
         //draw player
         v.fill(0, 0, 100);
-        v.strokeWeight(3);
+        v.strokeWeight(16);
         v.stroke(abs(v.frameCount%360), 100, 100);
         v.ellipse(position.x, position.y, diameter, diameter);
 
@@ -63,21 +66,24 @@ public class Player extends VisualSetup{
             }//end if
         }//end for
 
+        //only fire if enemy is in range
+        if(enemy.distance < range){
+            //calculate point of origin for weapon fire
+            PVector rectCenter = new PVector(enemy.position.x + enemy.size/2, enemy.position.y + enemy.size/2);
+            PVector circleSurf = findCircleSurf(rectCenter, position, (float)diameter/2);
 
-        //calculate point of origin for weapon fire
-        PVector rectCenter = new PVector(enemy.position.x + enemy.size/2, enemy.position.y + enemy.size/2);
-        PVector circleSurf = findCircleSurf(rectCenter, position, (float)diameter/2);
-
-        //draw player fire
-        v.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
+            //draw player fire
+            v.strokeWeight(10);
+            v.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
 
 
-        //deal damage
-        if(timePassed > dmgCooldown){
+            //deal damage
+            if(timePassed > dmgCooldown){
 
-            prevTime = System.currentTimeMillis();
-            enemy.health -= dmg;
+                prevTime = System.currentTimeMillis();
+                enemy.health -= dmg;
 
+            }//end if
         }//end if
     }//end method
 
