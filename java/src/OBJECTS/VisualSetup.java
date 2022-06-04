@@ -13,8 +13,7 @@ public class VisualSetup extends PApplet
     //declare variables
     private Player player;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-    public boolean roundWin;
-    private int round;
+    public int round, state;
 
 
 
@@ -35,10 +34,8 @@ public class VisualSetup extends PApplet
         colorMode(HSB, 360, 100, 100);
         strokeWeight(5);
         background(0);
-        //declare visualizations
-        player = new Player(width, height, this);
-        round = 0;
-        roundWin = true;
+        newGame();
+        state = 0;
 
     }//end setup
 
@@ -47,26 +44,101 @@ public class VisualSetup extends PApplet
     //draw
     public void draw(){
 
-        if(player.health > 0){
+            switch(state){
 
-            background(0);
+                case 0:
+                    startGame();
+                break;
 
-            //is round over? if so start new round
-            if(enemies.size() == 0){
-                nextRound();
-                roundWin = false;
-            }//end if
+                case 1:
+                    background(0);
+                    noFill();
+                    stroke(0, 100, 100, 70);
+                    circle(width/2, height/2, player.range * 2);
 
-            player.updatePlayer(enemies);
-            updateEnemies();
+                    //is round over? if so start new round
+                    if(enemies.size() == 0){
+                        nextRound();
+                    }//end if
+        
+                    player.updatePlayer(enemies);
+                    updateEnemies();
+                break;
 
-        }//end if
-        else{
+                case 2:
+                    playerDeath();
+                break;
 
-            System.out.println("Player has died");
+                case 3:
 
-        }//end else
+                case 4:
+                case 5:
+
+                default:
+                    System.out.println("This should not occur, switch error");
+                break;
+
+            }//end switch
     }//end draw
+
+
+
+    private void newGame() {
+
+        enemies.clear();
+        player = new Player(width, height, this);
+        round = 0;
+        state = 1;
+
+    }//end method
+
+
+
+    private void playerDeath() {
+
+        textSize(128);
+        textAlign(CENTER);
+        background(0);
+        stroke(255);
+        fill(255);
+        text("YOU DIED!!!", width/2, height/3);
+        text("PRESS SPACE TO RESTART", width/2, height/3 * 2);
+
+    }//end method
+
+
+
+    public void keyPressed(){
+
+        switch(state){
+
+            case 0:
+                if(key == ' ') state = 1;
+            break;
+
+            case 2:
+                if(key == ' ') newGame();
+            break;
+
+            default:
+
+            break;
+
+        }//end switch
+    }//end method
+
+
+
+    private void startGame() {
+
+        textSize(128);
+        textAlign(CENTER);
+        background(0);
+        stroke(255);
+        fill(255);
+        text("PRESS SPACE TO START", width/2, height/2);
+
+    }//end method
 
 
 
@@ -93,13 +165,17 @@ public class VisualSetup extends PApplet
 
             //update all enemies
             if(e.health > 0){
+
                 e.updateEnemy();
+
             }//end if
             else{
+
                 itr.remove();
+                player.points += 5;
+
             }//end else
         }//end while
-
     }//end method
 
 
