@@ -8,7 +8,7 @@ public class Enemy extends VisualSetup{
     public long prevTime, timePassed;
     public float size, distance, dmg, dmgCooldown, health;
     private VisualSetup v;
-    private Player p;
+    private Player player;
     private boolean collision;
     
 
@@ -24,7 +24,7 @@ public class Enemy extends VisualSetup{
         this.dmg = damage;
         this.dmgCooldown = 1000;
         this.v = applet;
-        this.p = player;
+        this.player = player;
 
     }
 
@@ -51,14 +51,19 @@ public class Enemy extends VisualSetup{
 
 
 
-    private void dealDmg() {
+    private void dealDmg(){
+
         timePassed = System.currentTimeMillis();
 
         if(timePassed > dmgCooldown){
 
-            p.health -= dmg;
+            if(player.health > 0){
+                player.health -= dmg;
+            }
+            else{
+                v.state = 2;
+            }
             prevTime = System.currentTimeMillis();
-            System.out.println(p.health);
 
         }//end if
     }//end method
@@ -71,25 +76,24 @@ public class Enemy extends VisualSetup{
         PVector position;
 
         switch(side){
+            //Verticle
             case 0:
-            position = new PVector(random(-size, width), -50);
-            return position;
-
+                position = new PVector(random(-width, 0), random(-width, height+width));
+                return position;
             case 1:
-            position = new PVector(width + 50, random(0, height));
-            return position;
-
+                position = new PVector(random(width, width*2), random(-width, height+width));
+                return position;
+            //Horizontal
             case 2:
-            position = new PVector(random(0, width), height + 50);
-            return position;
-
+                position = new PVector(random(0, width), random(-width, 0));
+                return position;
             case 3:
-            position = new PVector(-50, random(0, height));
-            return position;
-
+                position = new PVector(random(0, width), random(height, height+width));
+                return position;
+            //Default
             default:
             System.out.println("default case");
-            return new PVector(0, 0);
+            return null;
 
         }//end switch
     }//end method
@@ -128,10 +132,9 @@ public class Enemy extends VisualSetup{
         float distX = center.x-testX;
         float distY = center.y-testY;
         distance = sqrt((distX*distX) + (distY*distY));
-        //System.out.println("distx: " + distX + "\nDisty: " + distY + "\ndistance: " + distance + "\n(int)(height * 0.2f)" + (int)(height * 0.2f));
         
         // if the distance is less than the radius, collision!
-        return (distance <= p.diameter/2) ? true : false;
+        return (distance <= player.diameter/2) ? true : false;
 
     }//end method
 }//end class
