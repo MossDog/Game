@@ -9,26 +9,25 @@ public class Player extends VisualSetup{
     //declare variables.
     public PVector position;
     public long prevTime, timePassed;
-    public float diameter, dmg, dmgCooldown, health, points, range;
+    public float diameter, health, maxHealth, damage, dmgCooldown,  range, points;
     private VisualSetup v;
 
 
 
     //constructor
-    public Player(int width, int height, VisualSetup applet){
+    public Player(int width, int height, float maxHealth, float damage, float dmgCooldown, float range, VisualSetup applet){
 
         this.position = new PVector(width/2, height/2);
         this.diameter = (int)(height * 0.2f);
         this.prevTime = System.currentTimeMillis();
-        this.health = 100;
-        this.dmg = 30;
-        this.dmgCooldown = 500;
-        this.range = 300;
         this.v = applet;
+        this.health = maxHealth;
+        this.damage = damage;
+        this.dmgCooldown = dmgCooldown;
+        this.range = range;
         this.points = 0;
 
-
-    }//end method v
+    }//end method
 
 
 
@@ -40,8 +39,8 @@ public class Player extends VisualSetup{
         v.stroke(abs(v.frameCount%360), 100, 100);
         v.ellipse(position.x, position.y, diameter, diameter);
 
-        //draw player fire
-        fire(enemies);
+        //if enemies exist player considers firing
+        if(enemies.size()>0) fire(enemies);
 
     }//end method
 
@@ -65,7 +64,7 @@ public class Player extends VisualSetup{
 
             }//end if
         }//end for
-
+        
         //only fire if enemy is in range
         if(enemy.distance < range){
             //calculate point of origin for weapon fire
@@ -81,7 +80,7 @@ public class Player extends VisualSetup{
             if(timePassed > dmgCooldown){
 
                 prevTime = System.currentTimeMillis();
-                enemy.health -= dmg;
+                enemy.health -= damage;
 
             }//end if
         }//end if
