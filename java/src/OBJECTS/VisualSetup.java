@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import processing.core.PApplet;
+import processing.data.Table;
+import processing.data.TableRow;
 
 public class VisualSetup extends PApplet
 {
@@ -13,7 +15,8 @@ public class VisualSetup extends PApplet
     //declare variables
     private Player player;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-    public int round, state;
+    public int round, money, state;
+    public Table stats;
 
 
 
@@ -34,7 +37,7 @@ public class VisualSetup extends PApplet
         colorMode(HSB, 360, 100, 100);
         strokeWeight(5);
         background(0);
-        newGame();
+        loadStats();
         state = 0;
 
     }//end setup
@@ -60,9 +63,10 @@ public class VisualSetup extends PApplet
                     if(enemies.size() == 0){
                         nextRound();
                     }//end if
-        
-                    player.updatePlayer(enemies);
+                    
                     updateEnemies();
+                    player.updatePlayer(enemies);
+                    
                 break;
 
                 case 2:
@@ -83,14 +87,37 @@ public class VisualSetup extends PApplet
 
 
 
-    private void newGame() {
+    public void playAgain() {
 
         enemies.clear();
-        player = new Player(width, height, this);
+        player.health = player.maxHealth;
         round = 0;
         state = 1;
 
     }//end method
+
+
+
+    private void loadStats() {
+
+        stats = loadTable("playerstats.csv", "header");
+
+        //gets row of stats in stats.csv, row 1 holds titles.
+        TableRow row = stats.getRow(0);
+        float maxHealth = row.getInt("health");
+        float damage = row.getInt("damage");
+        float dmgCooldown = row.getInt("dmgcooldown");
+        float range = row.getInt("range");
+        player = new Player(width, height, maxHealth, damage, dmgCooldown, range, this);
+
+    }//end method
+
+    
+
+    //SAVE ANY STAT CHANGES TO PLAYERSTATS.CSV BEFORE PROGRAM IS CLOSED
+    /* private void saveStats(){
+
+    }//end method */
 
 
 
@@ -117,7 +144,7 @@ public class VisualSetup extends PApplet
             break;
 
             case 2:
-                if(key == ' ') newGame();
+                if(key == ' ') playAgain();
             break;
 
             default:
@@ -187,14 +214,14 @@ public class VisualSetup extends PApplet
 
             for(int j = 0; j < 1 * round / 5; j++){
 
-                enemies.add(new Enemy(width, height, random(30, 50) + (round * 2.25f), random(15, 30) + (round * 2.25f), 700, player, this));
+                enemies.add(new Enemy(width, height, random(30, 50) + (round * 2.25f), random(7.5f, 15) + (round * 1.25f), 700, player, this));
 
             }//end loop
         }//end if
 
         for(int i = 0; i < 10 + round / 2; i++){
 
-            enemies.add(new Enemy(width, height, random(10, 15) + (round * 2.25f), random(10, 15) + (round * 2.25f), 700, player, this));
+            enemies.add(new Enemy(width, height, random(10, 15) + (round * 2.25f), random(5, 10) + (round * 1.25f), 700, player, this));
 
         }//end loop
     }//end method
