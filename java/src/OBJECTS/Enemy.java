@@ -34,12 +34,9 @@ public class Enemy extends VisualSetup{
 
         //CALCULATE COLLISION
         collision = circleRect();
-        if(collision){
-            dealDmg();
-        }//end if
-        else{
-            position.add(velocity);
-        }//end eles
+
+        if(collision) dealDmg();
+        else position.add(velocity);
 
         //DRAW ENEMY TO SCREEN
         v.fill(0, 0, 0);
@@ -53,7 +50,7 @@ public class Enemy extends VisualSetup{
 
     private void dealDmg(){
 
-        timePassed = System.currentTimeMillis();
+        timePassed = System.currentTimeMillis() - prevTime;
 
         if(timePassed > dmgCooldown){
 
