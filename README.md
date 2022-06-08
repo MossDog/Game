@@ -4,8 +4,10 @@
 - Different save games.
 - Mode that grants player all upgrade options.
 - Mode that is like a candy crush escalating difficulty road, auto generated changes allow for alot of content for little effort. Different things sprinkled throughout diffrent level ranges Eg lvl 0-10 normal enemies of increasing difficulty, lvl 10 - 20 normal enemies plus a special enemy, etc. Starting levels could be bespoke with auto generated levels afterward or these could be seperate.
+- Change state to a String to make code more readable?
 
 ## To Do List
+- Move needs to be adapted to work based off of time.
 - Consider different Art styles.
 - Figure out different fields like health and damage, how do these scale depending on the round?
 - Add upgrading player stats.
@@ -28,4 +30,3 @@
 
 ## Notes
 - There are redundant libraries in /lib/.
-- Move still needs to be adapted to work based off of time.
