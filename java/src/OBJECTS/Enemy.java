@@ -54,12 +54,8 @@ public class Enemy extends VisualSetup{
 
         if(timePassed > dmgCooldown){
 
-            if(player.health > 0){
-                player.health -= dmg;
-            }
-            else{
-                v.state = 2;
-            }
+            if(player.health > 0) player.health -= dmg;
+            
             prevTime = System.currentTimeMillis();
 
         }//end if

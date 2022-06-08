@@ -47,43 +47,80 @@ public class VisualSetup extends PApplet
     //draw
     public void draw(){
 
-            switch(state){
+        switch(state){
 
-                case 0:
-                    startGame();
-                break;
+            case 0:
+                startGame();
+            break;
 
-                case 1:
-                    background(0);
-                    noFill();
-                    stroke(0, 100, 100, 70);
-                    circle(width/2, height/2, player.range * 2);
+            case 1:
 
-                    //is round over? if so start new round
-                    if(enemies.size() == 0){
-                        nextRound();
-                    }//end if
+                background(0);
+                noFill();
+                stroke(0, 100, 100, 70);
+                circle(width/2, height/2, player.range * 2);
+
+                //is round over? if so start new round
+                if(enemies.size() == 0){
+                    nextRound();
+                }//end if
                     
-                    updateEnemies();
-                    player.updatePlayer(enemies);
-                    
-                break;
+                updateEnemies();
 
-                case 2:
-                    playerDeath();
-                break;
+                if(player.health > 0) player.updatePlayer(enemies);
+                else state = 2;
 
-                case 3:
+                //displayHUD();
+                debugHUD();
 
-                case 4:
-                case 5:
+            break;
 
-                default:
-                    System.out.println("This should not occur, switch error");
-                break;
 
-            }//end switch
+            case 2: playerDeath(); break;
+
+
+            case 3:
+
+            case 4:
+            case 5:
+
+            default:
+                System.out.println("This should not occur, switch error");
+            break;
+
+        }//end switch
     }//end draw
+
+
+
+    /* private void displayHUD() {
+    } */
+
+
+
+    private void debugHUD() {
+
+        textSize(28);
+        textAlign(LEFT);
+        stroke(255);
+        fill(255);
+        text("Player Health: " + player.health, 0, 28);
+        text("Player Max Health: " + player.maxHealth, 0, 28 * 2);
+        text("Player Damage: " + player.damage, 0, 28 * 3);
+        text("Player Points: " + player.points, 0, 28 * 4);
+
+        text("Money: " + money, 0, 28 * 6);
+        text("State: " + state, 0, 28 * 7);
+        text("Round: " + round, 0, 28 * 8);
+
+        text("enemies.size(): " + enemies.size(), 0, 28 * 10);
+        text("Example Enemy Health: " + random(10, 15) + (round * 2.25f), 0, 28 * 11);
+        text("Example Enemy Damage: " + random(5, 10) + (round * 1.25f), 0, 28 * 12);
+        text("Example Boss Health: " + random(30, 50) + (round * 2.25f), 0, 28 * 13);
+        text("Example Boss Damage: " + random(7.5f, 15) + (round * 1.25f), 0, 28 * 14);
+        text("Enemy Speed: " + 700, 0, 28 * 15);
+
+    }
 
 
 

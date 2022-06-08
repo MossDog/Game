@@ -21,6 +21,7 @@ public class Player extends VisualSetup{
         this.diameter = (int)(height * 0.2f);
         this.prevTime = System.currentTimeMillis();
         this.v = applet;
+        this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.damage = damage;
         this.dmgCooldown = dmgCooldown;
