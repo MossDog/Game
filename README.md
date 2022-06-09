@@ -15,6 +15,7 @@
 - Cookie clicker esque click to gain points at bare start (noStat).
 - Draw two circles with noStroke() instead of 1 with stroke,fill.
 - Consider relocating collision from Enemy to VisualSetup, this may also help with different weapon collision system in the future.
+- fix damage cooldown on enemies
 
 ### Completed
 - Figure out where collision detection belongs and implement it properly.
@@ -27,6 +28,8 @@
 - Added loading player stats from csv.
 - Improved health and damage system to be more viable, could see further change.
 - Enemy cooldown times now work properly.
+- player now regenerates health over time
 
 ## Notes
 - There are redundant libraries in /lib/.
+- Enemies and Player access eachother differently, the Enemy objects are passed the player upon creation, but the Player only accesses enemies after being passed the Enemies arraylist in a method call.
