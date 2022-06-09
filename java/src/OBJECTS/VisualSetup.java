@@ -1,4 +1,4 @@
-/* THIS CLASS IS USED TO GIVE GAME OBJECTS ACCESS TO P.C.PAPPLET */
+ /* THIS CLASS IS USED TO GIVE GAME OBJECTS ACCESS TO P.C.PAPPLET */
 
 package OBJECTS;
 
@@ -106,19 +106,22 @@ public class VisualSetup extends PApplet
         fill(255);
         text("Player Health: " + player.health, 0, 28);
         text("Player Max Health: " + player.maxHealth, 0, 28 * 2);
-        text("Player Damage: " + player.damage, 0, 28 * 3);
-        text("Player Points: " + player.points, 0, 28 * 4);
+        text("Player Health Regen: " + player.healthRegen, 0, 28 * 3);
+        text("Player Regen Cooldown: " + player.regenCooldown, 0, 28 * 4);
+        text("Player Damage: " + player.damage, 0, 28 * 5);
+        text("Player Damage Cooldown: " + player.damageCooldown, 0, 28 * 6);
+        text("Player Points: " + player.points, 0, 28 * 7);
 
-        text("Money: " + money, 0, 28 * 6);
-        text("State: " + state, 0, 28 * 7);
-        text("Round: " + round, 0, 28 * 8);
+        text("Money: " + money, 0, 28 * 9);
+        text("State: " + state, 0, 28 * 10);
+        text("Round: " + round, 0, 28 * 11);
 
-        text("enemies.size(): " + enemies.size(), 0, 28 * 10);
-        text("Example Enemy Health: " + random(10, 15) + (round * 2.25f), 0, 28 * 11);
-        text("Example Enemy Damage: " + random(5, 10) + (round * 1.25f), 0, 28 * 12);
-        text("Example Boss Health: " + random(30, 50) + (round * 2.25f), 0, 28 * 13);
-        text("Example Boss Damage: " + random(7.5f, 15) + (round * 1.25f), 0, 28 * 14);
-        text("Enemy Speed: " + 700, 0, 28 * 15);
+        text("enemies.size(): " + enemies.size(), 0, 28 * 13);
+        text("Example Enemy Health: " + random(10, 15) + (round * 2.25f), 0, 28 * 14);
+        text("Example Enemy Damage: " + random(5, 10) + (round * 1.25f), 0, 28 * 15);
+        text("Example Boss Health: " + random(30, 50) + (round * 2.25f), 0, 28 * 16);
+        text("Example Boss Damage: " + random(7.5f, 15) + (round * 1.25f), 0, 28 * 17);
+        text("Enemy Speed: " + 700, 0, 28 * 18);
 
     }
 
@@ -139,13 +142,15 @@ public class VisualSetup extends PApplet
 
         stats = loadTable("playerstats.csv", "header");
 
-        //gets row of stats in stats.csv, row 1 holds titles.
+        //gets row of stats in stats.csv, row 0 holds player stats.
         TableRow row = stats.getRow(0);
         float maxHealth = row.getInt("health");
+        float regen = row.getInt("regen");
+        float regenCooldown = row.getInt("regencooldown");
         float damage = row.getInt("damage");
         float dmgCooldown = row.getInt("dmgcooldown");
         float range = row.getInt("range");
-        player = new Player(width, height, maxHealth, damage, dmgCooldown, range, this);
+        player = new Player(width, height, maxHealth, regen, regenCooldown, damage, dmgCooldown, range, this);
 
     }//end method
 
