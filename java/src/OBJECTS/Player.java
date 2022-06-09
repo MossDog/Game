@@ -8,23 +8,26 @@ public class Player extends VisualSetup{
 
     //declare variables.
     public PVector position;
-    public long prevTime, timePassed;
-    public float diameter, health, maxHealth, damage, dmgCooldown,  range, points;
+    public long prevTimeDmg, prevtimeRegen;
+    public float diameter, health, maxHealth, healthRegen, regenCooldown, damage, damageCooldown,  range, points;
     private VisualSetup v;
 
 
 
     //constructor
-    public Player(int width, int height, float maxHealth, float damage, float dmgCooldown, float range, VisualSetup applet){
+    public Player(int width, int height, float maxHealth, float healthRegen, float regenCooldown, float damage, float damageCooldown, float range, VisualSetup applet){
 
         this.position = new PVector(width/2, height/2);
         this.diameter = (int)(height * 0.2f);
-        this.prevTime = System.currentTimeMillis();
+        this.prevTimeDmg = System.currentTimeMillis();
+        this.prevtimeRegen = System.currentTimeMillis();
         this.v = applet;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.healthRegen = healthRegen;
+        this.regenCooldown = regenCooldown;
         this.damage = damage;
-        this.dmgCooldown = dmgCooldown;
+        this.damageCooldown = damageCooldown;
         this.range = range;
         this.points = 0;
 
@@ -41,16 +44,31 @@ public class Player extends VisualSetup{
         v.ellipse(position.x, position.y, diameter, diameter);
 
         //if enemies exist player considers firing
-        if(enemies.size()>0) fire(enemies);
+        if(enemies.size()>0) drawBeam(enemies);
+        regenHealth();
 
     }//end method
 
 
 
-    public void fire(ArrayList<Enemy> enemies){
+    private void regenHealth() {
+
+        long timePassedRegen = System.currentTimeMillis() - prevtimeRegen;
+
+        if(timePassedRegen > regenCooldown && health + healthRegen < maxHealth){
+
+            prevtimeRegen = System.currentTimeMillis();
+            health += healthRegen;
+
+        }//end if
+
+    }
+
+
+
+    public void drawBeam(ArrayList<Enemy> enemies){
 
         float closest = Float.MAX_VALUE;
-        timePassed = System.currentTimeMillis() - prevTime;
 
         //dummy Enemy object
         Enemy enemy = null;
@@ -76,15 +94,24 @@ public class Player extends VisualSetup{
             v.strokeWeight(10);
             v.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
 
+            dealDmg(enemy);
+
+        }//end if
+    }//end method
+
+
+
+    public void dealDmg(Enemy enemy){
+
+        long timePassedDmg = System.currentTimeMillis() - prevTimeDmg;
 
             //deal damage
-            if(timePassed > dmgCooldown){
+            if(timePassedDmg > damageCooldown){
 
-                prevTime = System.currentTimeMillis();
+                prevTimeDmg = System.currentTimeMillis();
                 enemy.health -= damage;
 
             }//end if
-        }//end if
     }//end method
 
 
