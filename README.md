@@ -18,7 +18,6 @@
 - fix damage cooldown on enemies
 
 ### Completed
-- Figure out where collision detection belongs and implement it properly.
 - implemented cooldown times so gamespeed isn't dependant on frames.
 - Implemented the beam as the primary weapon.
 - implemented rudimentary health system and speed system.
@@ -29,6 +28,7 @@
 - Improved health and damage system to be more viable, could see further change.
 - Enemy cooldown times now work properly.
 - player now regenerates health over time
+- fire function now split into drawbeam and dealdmg to accomodate different firing methods
 
 ## Notes
 - There are redundant libraries in /lib/.
