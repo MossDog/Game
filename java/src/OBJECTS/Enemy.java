@@ -1,62 +1,204 @@
 package OBJECTS;
 
+import processing.core.PShape;
 import processing.core.PVector;
 
 public class Enemy extends VisualSetup{
 
-    public PVector position, center, velocity;
-    public long prevTime, timePassed;
-    public float size, distance, dmg, dmgCooldown, health;
+    public PVector position, center, velocity, unitVector;
+    public PShape shape;
+    public long prevTimeDamage, prevTimeMove;
+    public String rank;
+    public float size, distance, health, damage, damageCooldown, speed;
     private VisualSetup v;
     private Player player;
     private boolean collision;
     
 
 
-    public Enemy(int width, int height, float health, float damage, float speed, Player player, VisualSetup applet){
+    public Enemy(int width, int height, String rank_, Player player, VisualSetup applet){
 
-        this.center = new PVector(width/2, height/2);
-        this.position = generatePosition(width, height);
-        this.size = random(25, 50);
-        this.velocity = PVector.sub(center, position).div(speed);
-        this.prevTime = System.currentTimeMillis();
-        this.health = health;
-        this.dmg = damage;
-        this.dmgCooldown = 1000;
         this.v = applet;
         this.player = player;
+        this.position = generatePosition(width, height);
+        this.size = random(25, 50);
 
-    }
+        switch(rank_){
+
+            case "base":
+                this.health = random(10, 15) + (v.round * 2.25f);
+                this.damage = random(5, 10) + (v.round * 1.25f);
+                this.speed = 3 + (v.round * 0.01f);
+                this.size = 25;
+                this.shape = generateShape(rank_);
+            break;
+
+            case "hBoss":
+                this.health = random(30, 50) + (v.round * 2.25f);
+                this.damage = random(5, 10) + (v.round * 1.25f);
+                this.speed = 3 + (v.round * 0.01f);
+                this.size = 35;
+                this.shape = generateShape(rank_);
+            break;
+
+            case "dBoss":
+                this.health = random(10, 15) + (round * 2.25f);
+                this.damage = random(7.5f, 15) + (round * 1.25f);
+                this.speed = 3 + (round * 0.01f);
+                this.size = 25;
+                this.shape = generateShape(rank_);
+            break;
+
+            case "sBoss":
+                this.health = random(10, 15) + (round * 2.25f);
+                this.damage = random(5, 10) + (round * 1.25f);
+                this.speed = 5 + (round * 0.01f);
+                this.size = 15;
+                this.shape = generateShape(rank_);
+            break;
+
+            case "agent":
+                this.health = random(30, 50) + (round * 2.25f);
+                this.damage = random(7.5f, 15) + (round * 1.25f);
+                this.speed = 5 + (round * 0.01f);
+                this.size = 35;
+                this.shape = generateShape(rank_);
+            break;
+
+            default:
+            break;
+
+        }//end switch
+        this.center = new PVector(width/2, height/2);
+        this.unitVector = PVector.sub(center, position).normalize();
+        this.velocity = unitVector.mult(speed);
+        this.prevTimeDamage = System.currentTimeMillis();
+        this.damageCooldown = 1000;
+
+    }//end constructor
+
+
+
+    private PShape generateShape(String rank){
+
+        PShape shape_;
+
+        switch(rank){
+
+            case "base":
+                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
+                shape_.setFill(color(0));
+                shape_.setStrokeWeight(3);
+                shape_.setStroke(color(255));
+            return shape_;
+
+            case "hBoss":
+                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
+                shape_.setFill(color(0));
+                shape_.setStrokeWeight(3);
+                shape_.setStroke(color(0, 255, 0));
+            return shape_;
+
+            case "dBoss":
+                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
+                shape_.setFill(color(0));
+                shape_.setStrokeWeight(3);
+                shape_.setStroke(color(255));
+            return shape_;
+
+            case "sBoss":
+                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
+                shape_.setFill(color(0));
+                shape_.setStrokeWeight(3);
+                shape_.setStroke(color(255));
+            return shape_;
+
+            case "agent":
+                PShape body, hole;
+                float holeSize = size / 3;
+
+                //MAKE GROUP OF SHAPES
+                shape_ = v.createShape(GROUP);
+
+                //MAKE BODY OF AGENT
+                body = v.createShape(RECT, -size, -size, size*2, size*2);
+                body.setFill(color(255));
+                body.setStrokeWeight(2);
+                body.setStroke(color(255, 0, 0));
+
+                //MAKE HOLE IN AGENT
+                hole = v.createShape(RECT, -holeSize, -holeSize, holeSize*2, holeSize*2);
+                hole.setFill(color(0));
+                hole.setStrokeWeight(1);
+                hole.setStroke(color(255, 0, 0));
+
+                //ADD SHAPES TO GROUP
+                shape_.addChild(body);
+                shape_.addChild(hole);
+            return shape_;//return group of shapes
+
+            default:
+            System.out.println("shape not created");
+            return null;
+
+        }//end switch
+    }//end method
 
 
 
     public void updateEnemy(){
 
-        //CALCULATE COLLISION
+        //CALCULATE COLLISION / MOVE
         collision = circleRect();
-
         if(collision) dealDmg();
-        else position.add(velocity);
+        else move();
+
+        
+        v.pushMatrix();//push current co-ordinate system to stack
 
         //DRAW ENEMY TO SCREEN
-        v.fill(0, 0, 0);
-        v.strokeWeight(3);
-        v.stroke(0, 100, 100);
-        v.rect(position.x, position.y, size, size);
+        v.translate(position.x, position.y);//(0, 0) now corresponds to (position.x, position.y)
+        v.shape(shape);//draw shape to screen at Enemy position
 
+        //DRAW ENEMY HEALTH INSIDE ENEMY
+        v.textSize(14);
+        v.textAlign(CENTER);
+        v.noStroke();
+        v.fill(255);
+        v.text((int)health, 0, 0);
+
+        v.popMatrix();//pop and restore previous co-ordinate system from stack
+
+
+    }//end method
+
+
+
+    private void move(){
+
+        long timePassed = System.currentTimeMillis() - prevTimeMove;
+
+        if(timePassed > 10){
+
+            position.add(velocity);
+            
+            prevTimeMove = System.currentTimeMillis();
+
+        }//end if
     }//end method
 
 
 
     private void dealDmg(){
 
-        timePassed = System.currentTimeMillis() - prevTime;
+        long timePassed = System.currentTimeMillis() - prevTimeDamage;
 
-        if(timePassed > dmgCooldown){
+        if(timePassed > damageCooldown){
 
-            if(player.health > 0) player.health -= dmg;
+            //deal damage if play
+            player.health -= damage;
             
-            prevTime = System.currentTimeMillis();
+            prevTimeDamage = System.currentTimeMillis();
 
         }//end if
     }//end method

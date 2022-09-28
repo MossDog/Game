@@ -16,7 +16,7 @@ public class VisualSetup extends PApplet
     private Player player;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     public int round, money, state;
-    public Table stats;
+    public Table statsTable;
 
 
 
@@ -56,14 +56,9 @@ public class VisualSetup extends PApplet
             case 1:
 
                 background(0);
-                noFill();
-                stroke(0, 100, 100, 70);
-                circle(width/2, height/2, player.range * 2);
 
                 //is round over? if so start new round
-                if(enemies.size() == 0){
-                    nextRound();
-                }//end if
+                if(enemies.size() == 0) nextRound();
                     
                 updateEnemies();
 
@@ -72,6 +67,7 @@ public class VisualSetup extends PApplet
 
                 //displayHUD();
                 debugHUD();
+                upgradeHUD();
 
             break;
 
@@ -95,6 +91,39 @@ public class VisualSetup extends PApplet
 
     /* private void displayHUD() {
     } */
+
+
+
+    private void upgradeHUD() {
+
+        int xOffset = (int)((width/3) * 0.5f);
+        int yOffset = statsTable.getColumnCount()%2 == 0 ? height/(statsTable.getColumnCount()/2) : height/((statsTable.getColumnCount()/2)+1); //if list of upgrades is odd then ensure there is enough space for the last item.
+        strokeWeight(2);
+        stroke(255);
+        fill(0);
+        rect(width * 2/3, 0, (width/3)-1, height-1, 10);
+
+        textSize(20);
+        textAlign(CENTER);
+        stroke(255);
+        fill(255);
+
+        pushMatrix();
+        translate(width * 2/3, 0);
+
+        TableRow statsRow = statsTable.getRow(0);
+        TableRow priceRow = statsTable.getRow(1);
+        TableRow multRow = statsTable.getRow(2);
+
+        for(int i = 0; i < statsTable.getColumnCount(); i++){
+            String column = statsTable.getColumnTitle(i);
+            text("PRICE: " + priceRow.getInt(column) + "\nUPGRADE "+ column.toUpperCase() +"\n"+statsRow.getInt(column)+" +"+multRow.getString(column), xOffset/2, yOffset/2);
+            if(i%2 == 0) translate(xOffset, 0);
+            else translate(-xOffset, yOffset);
+        }
+
+        popMatrix();
+    }//end method
 
 
 
@@ -140,10 +169,10 @@ public class VisualSetup extends PApplet
 
     private void loadStats() {
 
-        stats = loadTable("playerstats.csv", "header");
+        statsTable = loadTable("playerstats.csv", "header");
 
         //gets row of stats in stats.csv, row 0 holds player stats.
-        TableRow row = stats.getRow(0);
+        TableRow row = statsTable.getRow(0);
         float maxHealth = row.getInt("health");
         float regen = row.getInt("regen");
         float regenCooldown = row.getInt("regencooldown");
@@ -249,22 +278,52 @@ public class VisualSetup extends PApplet
 
 
 
-    //POPULATES ARRAYLIST OF ENEMIES
+    //POPULATES ARRAYLIST OF ENEMIES EACH ROUND
     public void generateEnemies(){
 
-        if(round % 5 == 0){
+        int bossRoundInterval = 3;
+        int agentRoundInterval = 10;
 
-            for(int j = 0; j < 1 * round / 5; j++){
+        //REGULAR ENEMIES
+        for(int i = 0; i < 10 + round / 2; i++){
 
-                enemies.add(new Enemy(width, height, random(30, 50) + (round * 2.25f), random(7.5f, 15) + (round * 1.25f), 700, player, this));
+            enemies.add(new Enemy(width, height, "base", player, this));
 
+        }//end loop
+
+        //BOSS ENEMIES
+        if(round % bossRoundInterval == 0){
+            for(int j = 0; j < 1 * round / bossRoundInterval; j++){
+
+                int random = (int)Math.random() % 3;
+
+                switch(random){
+                    
+                    case 0:
+                        enemies.add(new Enemy(width, height, "hBoss", player, this));
+                    break;
+
+                    case 1:
+                        enemies.add(new Enemy(width, height, "dBoss", player, this));
+                    break;
+
+                    case 2:
+                        enemies.add(new Enemy(width, height, "sBoss", player, this));
+                    break;
+
+                    default:break;
+
+                }//end switch
             }//end loop
         }//end if
 
-        for(int i = 0; i < 10 + round / 2; i++){
+        //AGENTS
+        if(round % agentRoundInterval == 0){
+            for(int j = 0; j < 1 * round / agentRoundInterval; j++){
 
-            enemies.add(new Enemy(width, height, random(10, 15) + (round * 2.25f), random(5, 10) + (round * 1.25f), 700, player, this));
+                enemies.add(new Enemy(width, height, "agent", player, this));
 
-        }//end loop
+            }//end loop
+        }//end if
     }//end method
 }//end

@@ -8,7 +8,7 @@ public class Player extends VisualSetup{
 
     //declare variables.
     public PVector position;
-    public long prevTimeDmg, prevtimeRegen;
+    public long prevTimeDamage, prevtimeRegen;
     public float diameter, health, maxHealth, healthRegen, regenCooldown, damage, damageCooldown,  range, points;
     private VisualSetup v;
 
@@ -19,7 +19,7 @@ public class Player extends VisualSetup{
 
         this.position = new PVector(width/2, height/2);
         this.diameter = (int)(height * 0.2f);
-        this.prevTimeDmg = System.currentTimeMillis();
+        this.prevTimeDamage = System.currentTimeMillis();
         this.prevtimeRegen = System.currentTimeMillis();
         this.v = applet;
         this.maxHealth = maxHealth;
@@ -37,13 +37,20 @@ public class Player extends VisualSetup{
 
     public void updatePlayer(ArrayList<Enemy> enemies){
 
-        //draw player
-        v.fill(0, 0, 100);
-        v.strokeWeight(16);
-        v.stroke(abs(v.frameCount%360), 100, 100);
+        //DRAW PLAYER
+        v.noStroke();
+        v.fill(abs(v.frameCount%360), 100, 100);
         v.ellipse(position.x, position.y, diameter, diameter);
+        v.fill(0, 0, 100);
+        v.ellipse(position.x, position.y, diameter-16, diameter-16);
 
-        //if enemies exist player considers firing
+        //DRAW PLAYER RANGE
+        v.noFill();
+        v.strokeWeight(4);
+        v.stroke(0, 100, 100, 70);
+        v.circle(position.x, position.y, range * 2);
+
+        //IF ENEMIES EXIST, PLAYER CONSIDERS FIRING
         if(enemies.size()>0) drawBeam(enemies);
         regenHealth();
 
@@ -87,12 +94,12 @@ public class Player extends VisualSetup{
         //only fire if enemy is in range
         if(enemy.distance < range){
             //calculate point of origin for weapon fire
-            PVector rectCenter = new PVector(enemy.position.x + enemy.size/2, enemy.position.y + enemy.size/2);
-            PVector circleSurf = findCircleSurf(rectCenter, position, (float)diameter/2);
+            PVector circleSurf = findCircleSurf(enemy.position, position, (float)diameter/2);
 
             //draw player fire
             v.strokeWeight(10);
-            v.line(circleSurf.x, circleSurf.y, rectCenter.x, rectCenter.y);
+            v.stroke(abs(v.frameCount%360), 100, 100);
+            v.line(circleSurf.x, circleSurf.y, enemy.position.x, enemy.position.y);
 
             dealDmg(enemy);
 
@@ -103,12 +110,12 @@ public class Player extends VisualSetup{
 
     public void dealDmg(Enemy enemy){
 
-        long timePassedDmg = System.currentTimeMillis() - prevTimeDmg;
+        long timePassedDmg = System.currentTimeMillis() - prevTimeDamage;
 
             //deal damage
             if(timePassedDmg > damageCooldown){
 
-                prevTimeDmg = System.currentTimeMillis();
+                prevTimeDamage = System.currentTimeMillis();
                 enemy.health -= damage;
 
             }//end if
