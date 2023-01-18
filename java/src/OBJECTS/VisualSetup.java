@@ -13,8 +13,8 @@ public class VisualSetup extends PApplet
 {
 
     //declare variables
-    private Player player;
-    private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    public Player player;
+    public static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     public int round, money, state;
     public Table statsTable;
 
@@ -180,7 +180,7 @@ public class VisualSetup extends PApplet
         float dmgCooldown = row.getInt("dmgcooldown");
         float range = row.getInt("range");
         player = new Player(width, height, maxHealth, regen, regenCooldown, damage, dmgCooldown, range, this);
-
+        //System.out.println(" "+ width + " "+height+ " "+maxHealth+ " "+regen+ " "  +regenCooldown+ " "+damage+" "+dmgCooldown+ " "+range);
     }//end method
 
     
@@ -283,11 +283,12 @@ public class VisualSetup extends PApplet
 
         int bossRoundInterval = 3;
         int agentRoundInterval = 10;
+        ArrayList<Enemy> tempEnemies = new ArrayList<Enemy>();
 
         //REGULAR ENEMIES
         for(int i = 0; i < 10 + round / 2; i++){
 
-            enemies.add(new Enemy(width, height, "base", player, this));
+            tempEnemies.add(new Enemy(width, height, player, this));
 
         }//end loop
 
@@ -300,15 +301,15 @@ public class VisualSetup extends PApplet
                 switch(random){
                     
                     case 0:
-                        enemies.add(new Enemy(width, height, "hBoss", player, this));
+                    tempEnemies.add(new HealthBoss(width, height, player, this));
                     break;
 
                     case 1:
-                        enemies.add(new Enemy(width, height, "dBoss", player, this));
+                    tempEnemies.add(new DamageBoss(width, height, player, this));
                     break;
 
                     case 2:
-                        enemies.add(new Enemy(width, height, "sBoss", player, this));
+                    tempEnemies.add(new SpeedBoss(width, height, player, this));
                     break;
 
                     default:break;
@@ -321,9 +322,14 @@ public class VisualSetup extends PApplet
         if(round % agentRoundInterval == 0){
             for(int j = 0; j < 1 * round / agentRoundInterval; j++){
 
-                enemies.add(new Enemy(width, height, "agent", player, this));
+                tempEnemies.add(new Agent(width, height, player, this));
 
             }//end loop
         }//end if
+
+        SpawnThread sThread = new SpawnThread(tempEnemies, enemies, 800);
+        sThread.start();
+        System.out.println("ijfoije");
+        while(enemies.size()==0){System.out.println("thread status: " + sThread.getState());}
     }//end method
 }//end

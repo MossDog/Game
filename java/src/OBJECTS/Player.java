@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import processing.core.PVector;
 
-public class Player extends VisualSetup{
+public class Player{
 
     //declare variables.
     public PVector position;
@@ -39,7 +39,7 @@ public class Player extends VisualSetup{
 
         //DRAW PLAYER
         v.noStroke();
-        v.fill(abs(v.frameCount%360), 100, 100);
+        v.fill(VisualSetup.abs(v.frameCount%360), 100, 100);
         v.ellipse(position.x, position.y, diameter, diameter);
         v.fill(0, 0, 100);
         v.ellipse(position.x, position.y, diameter-16, diameter-16);
@@ -49,6 +49,13 @@ public class Player extends VisualSetup{
         v.strokeWeight(4);
         v.stroke(0, 100, 100, 70);
         v.circle(position.x, position.y, range * 2);
+
+        //DRAW PLAYER HEALTH
+        v.textSize(20);
+        v.textAlign(processing.core.PApplet.CENTER);
+        v.noStroke();
+        v.fill(0);
+        v.text((int)health, position.x, position.y);
 
         //IF ENEMIES EXIST, PLAYER CONSIDERS FIRING
         if(enemies.size()>0) drawBeam(enemies);
@@ -98,7 +105,7 @@ public class Player extends VisualSetup{
 
             //draw player fire
             v.strokeWeight(10);
-            v.stroke(abs(v.frameCount%360), 100, 100);
+            v.stroke(VisualSetup.abs(v.frameCount%360), 100, 100);
             v.line(circleSurf.x, circleSurf.y, enemy.position.x, enemy.position.y);
 
             dealDmg(enemy);

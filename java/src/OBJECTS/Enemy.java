@@ -3,72 +3,31 @@ package OBJECTS;
 import processing.core.PShape;
 import processing.core.PVector;
 
-public class Enemy extends VisualSetup{
+public class Enemy{
 
     public PVector position, center, velocity, unitVector;
     public PShape shape;
     public long prevTimeDamage, prevTimeMove;
-    public String rank;
     public float size, distance, health, damage, damageCooldown, speed;
-    private VisualSetup v;
-    private Player player;
-    private boolean collision;
+    public VisualSetup v;
+    public Player player;
+    public boolean collision;
     
 
 
-    public Enemy(int width, int height, String rank_, Player player, VisualSetup applet){
+    public Enemy(int width, int height, Player player, VisualSetup applet){
 
         this.v = applet;
         this.player = player;
         this.position = generatePosition(width, height);
-        this.size = random(25, 50);
+        this.size = v.random(25, 50);
 
-        switch(rank_){
-
-            case "base":
-                this.health = random(10, 15) + (v.round * 2.25f);
-                this.damage = random(5, 10) + (v.round * 1.25f);
-                this.speed = 3 + (v.round * 0.01f);
-                this.size = 25;
-                this.shape = generateShape(rank_);
-            break;
-
-            case "hBoss":
-                this.health = random(30, 50) + (v.round * 2.25f);
-                this.damage = random(5, 10) + (v.round * 1.25f);
-                this.speed = 3 + (v.round * 0.01f);
-                this.size = 35;
-                this.shape = generateShape(rank_);
-            break;
-
-            case "dBoss":
-                this.health = random(10, 15) + (round * 2.25f);
-                this.damage = random(7.5f, 15) + (round * 1.25f);
-                this.speed = 3 + (round * 0.01f);
-                this.size = 25;
-                this.shape = generateShape(rank_);
-            break;
-
-            case "sBoss":
-                this.health = random(10, 15) + (round * 2.25f);
-                this.damage = random(5, 10) + (round * 1.25f);
-                this.speed = 5 + (round * 0.01f);
-                this.size = 15;
-                this.shape = generateShape(rank_);
-            break;
-
-            case "agent":
-                this.health = random(30, 50) + (round * 2.25f);
-                this.damage = random(7.5f, 15) + (round * 1.25f);
-                this.speed = 5 + (round * 0.01f);
-                this.size = 35;
-                this.shape = generateShape(rank_);
-            break;
-
-            default:
-            break;
-
-        }//end switch
+        this.health = v.random(100, 150) + (float) Math.pow(v.round, 1.7f);
+        this.damage = v.random(50, 100) + (float) Math.pow(v.round, 1.7f);
+        this.speed = 3 + (v.round * 0.01f);
+        this.size = 25;
+        this.shape = generateShape();
+        
         this.center = new PVector(width/2, height/2);
         this.unitVector = PVector.sub(center, position).normalize();
         this.velocity = unitVector.mult(speed);
@@ -79,69 +38,16 @@ public class Enemy extends VisualSetup{
 
 
 
-    private PShape generateShape(String rank){
+    public PShape generateShape(){
 
         PShape shape_;
 
-        switch(rank){
+        shape_ = v.createShape(processing.core.PApplet.RECT, -size, -size, size*2, size*2);
+        shape_.setFill(v.color(0));
+        shape_.setStrokeWeight(3);
+        shape_.setStroke(v.color(255));
+        return shape_;
 
-            case "base":
-                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
-                shape_.setFill(color(0));
-                shape_.setStrokeWeight(3);
-                shape_.setStroke(color(255));
-            return shape_;
-
-            case "hBoss":
-                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
-                shape_.setFill(color(0));
-                shape_.setStrokeWeight(3);
-                shape_.setStroke(color(0, 255, 0));
-            return shape_;
-
-            case "dBoss":
-                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
-                shape_.setFill(color(0));
-                shape_.setStrokeWeight(3);
-                shape_.setStroke(color(255));
-            return shape_;
-
-            case "sBoss":
-                shape_ = v.createShape(RECT, -size, -size, size*2, size*2);
-                shape_.setFill(color(0));
-                shape_.setStrokeWeight(3);
-                shape_.setStroke(color(255));
-            return shape_;
-
-            case "agent":
-                PShape body, hole;
-                float holeSize = size / 3;
-
-                //MAKE GROUP OF SHAPES
-                shape_ = v.createShape(GROUP);
-
-                //MAKE BODY OF AGENT
-                body = v.createShape(RECT, -size, -size, size*2, size*2);
-                body.setFill(color(255));
-                body.setStrokeWeight(2);
-                body.setStroke(color(255, 0, 0));
-
-                //MAKE HOLE IN AGENT
-                hole = v.createShape(RECT, -holeSize, -holeSize, holeSize*2, holeSize*2);
-                hole.setFill(color(0));
-                hole.setStrokeWeight(1);
-                hole.setStroke(color(255, 0, 0));
-
-                //ADD SHAPES TO GROUP
-                shape_.addChild(body);
-                shape_.addChild(hole);
-            return shape_;//return group of shapes
-
-            default:
-            System.out.println("shape not created");
-            return null;
-
-        }//end switch
     }//end method
 
 
@@ -162,7 +68,7 @@ public class Enemy extends VisualSetup{
 
         //DRAW ENEMY HEALTH INSIDE ENEMY
         v.textSize(14);
-        v.textAlign(CENTER);
+        v.textAlign(processing.core.PApplet.CENTER);
         v.noStroke();
         v.fill(255);
         v.text((int)health, 0, 0);
@@ -174,7 +80,7 @@ public class Enemy extends VisualSetup{
 
 
 
-    private void move(){
+    public void move(){
 
         long timePassed = System.currentTimeMillis() - prevTimeMove;
 
@@ -189,7 +95,7 @@ public class Enemy extends VisualSetup{
 
 
 
-    private void dealDmg(){
+    public void dealDmg(){
 
         long timePassed = System.currentTimeMillis() - prevTimeDamage;
 
@@ -207,23 +113,23 @@ public class Enemy extends VisualSetup{
 
     public PVector generatePosition(int width, int height){
 
-        int side = (int)random(4);
+        int side = (int) v.random(4);
         PVector position;
 
         switch(side){
             //Verticle
             case 0:
-                position = new PVector(random(-width, 0), random(-width, height+width));
+                position = new PVector(v.random(-width, 0), v.random(-width, height+width));
                 return position;
             case 1:
-                position = new PVector(random(width, width*2), random(-width, height+width));
+                position = new PVector(v.random(width, width*2), v.random(-width, height+width));
                 return position;
             //Horizontal
             case 2:
-                position = new PVector(random(0, width), random(-width, 0));
+                position = new PVector(v.random(0, width), v.random(-width, 0));
                 return position;
             case 3:
-                position = new PVector(random(0, width), random(height, height+width));
+                position = new PVector(v.random(0, width), v.random(height, height+width));
                 return position;
             //Default
             default:
@@ -266,8 +172,7 @@ public class Enemy extends VisualSetup{
         // get distance from closest edges
         float distX = center.x-testX;
         float distY = center.y-testY;
-        distance = sqrt((distX*distX) + (distY*distY));
-        
+        distance = processing.core.PApplet.sqrt((distX*distX) + (distY*distY));
         // if the distance is less than the radius, collision!
         return (distance <= player.diameter/2) ? true : false;
 
