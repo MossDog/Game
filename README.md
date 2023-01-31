@@ -13,6 +13,7 @@
 - ending the game in a ```higher round``` can apply a ```score multiplier``` like ```+100%``` score every ```ten rounds```. simple way to implement ```power and reward scaling```. E.g. ```price scales``` increasingly with the ```tiers of items``` in the shop, this keeps higher tiers somewhat out of players reach aside from being able to save points to unlock more powerful items (a tier or two higher than current). Before getting powerfull enough to make it to a higher level range, income multiplies, entire next tier gained quickly from there. ```No lvl requirement or XP gain```.
 
 ## To Do List
+- Implement tick counter based on time so that time can be accelerated and decelerated much easier
 - Consider different Art styles.
 - Figure out different fields like health and damage, how do these scale depending on the round?
 - Add upgrading player stats.
