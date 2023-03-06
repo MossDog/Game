@@ -17,6 +17,7 @@ public class VisualSetup extends PApplet
     public static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     public int round, money, state;
     public Table statsTable;
+    public HUD hud = new HUD(this);
 
 
 
@@ -65,9 +66,8 @@ public class VisualSetup extends PApplet
                 if(player.health > 0) player.updatePlayer(enemies);
                 else state = 2;
 
-                //displayHUD();
-                debugHUD();
-                upgradeHUD();
+                //debugHUD();
+                hud.display();
 
             break;
 
@@ -87,74 +87,7 @@ public class VisualSetup extends PApplet
         }//end switch
     }//end draw
 
-
-
-    /* private void displayHUD() {
-    } */
-
-
-
-    private void upgradeHUD() {
-
-        int xOffset = (int)((width/3) * 0.5f);
-        int yOffset = statsTable.getColumnCount()%2 == 0 ? height/(statsTable.getColumnCount()/2) : height/((statsTable.getColumnCount()/2)+1); //if list of upgrades is odd then ensure there is enough space for the last item.
-        strokeWeight(2);
-        stroke(255);
-        fill(0);
-        rect(width * 2/3, 0, (width/3)-1, height-1, 10);
-
-        textSize(20);
-        textAlign(CENTER);
-        stroke(255);
-        fill(255);
-
-        pushMatrix();
-        translate(width * 2/3, 0);
-
-        TableRow statsRow = statsTable.getRow(0);
-        TableRow priceRow = statsTable.getRow(1);
-        TableRow multRow = statsTable.getRow(2);
-
-        for(int i = 0; i < statsTable.getColumnCount(); i++){
-            String column = statsTable.getColumnTitle(i);
-            text("PRICE: " + priceRow.getInt(column) + "\nUPGRADE "+ column.toUpperCase() +"\n"+statsRow.getInt(column)+" +"+multRow.getString(column), xOffset/2, yOffset/2);
-            if(i%2 == 0) translate(xOffset, 0);
-            else translate(-xOffset, yOffset);
-        }
-
-        popMatrix();
-    }//end method
-
-
-
-    private void debugHUD() {
-
-        textSize(28);
-        textAlign(LEFT);
-        stroke(255);
-        fill(255);
-        text("Player Health: " + player.health, 0, 28);
-        text("Player Max Health: " + player.maxHealth, 0, 28 * 2);
-        text("Player Health Regen: " + player.healthRegen, 0, 28 * 3);
-        text("Player Regen Cooldown: " + player.regenCooldown, 0, 28 * 4);
-        text("Player Damage: " + player.damage, 0, 28 * 5);
-        text("Player Damage Cooldown: " + player.damageCooldown, 0, 28 * 6);
-        text("Player Points: " + player.points, 0, 28 * 7);
-
-        text("Money: " + money, 0, 28 * 9);
-        text("State: " + state, 0, 28 * 10);
-        text("Round: " + round, 0, 28 * 11);
-
-        text("enemies.size(): " + enemies.size(), 0, 28 * 13);
-        text("Example Enemy Health: " + random(10, 15) + (round * 2.25f), 0, 28 * 14);
-        text("Example Enemy Damage: " + random(5, 10) + (round * 1.25f), 0, 28 * 15);
-        text("Example Boss Health: " + random(30, 50) + (round * 2.25f), 0, 28 * 16);
-        text("Example Boss Damage: " + random(7.5f, 15) + (round * 1.25f), 0, 28 * 17);
-        text("Enemy Speed: " + 700, 0, 28 * 18);
-
-    }
-
-
+    
 
     public void playAgain() {
 
@@ -170,6 +103,7 @@ public class VisualSetup extends PApplet
     private void loadStats() {
 
         statsTable = loadTable("playerstats.csv", "header");
+        hud.setStatsTable(statsTable);
 
         //gets row of stats in stats.csv, row 0 holds player stats.
         TableRow row = statsTable.getRow(0);
@@ -329,7 +263,6 @@ public class VisualSetup extends PApplet
 
         SpawnThread sThread = new SpawnThread(tempEnemies, enemies, 800);
         sThread.start();
-        System.out.println("ijfoije");
         while(enemies.size()==0){System.out.println("thread status: " + sThread.getState());}
     }//end method
 }//end
